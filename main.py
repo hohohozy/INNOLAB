@@ -1,8 +1,11 @@
 from flask import Flask, request, jsonify
 import heapq
+import numpy as np
+import cv2
 
 app = Flask(__name__)
 
+# A* Pathfinding algorithm
 def a_star(grid, start, end):
     rows, cols = len(grid), len(grid[0])
     open_set = []
@@ -36,6 +39,15 @@ def a_star(grid, start, end):
                     heapq.heappush(open_set, (f_score, neighbor))
     return []
 
+# Convert the floorplan image to a 0/1 grid
+def floorplan_to_grid(image_path):
+    # Read the image
+    image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+    _, binary_image = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)
+    grid = np.where(binary_image == 255, 0, 1)  # 0 is passable, 1 is obstacle
+    return grid.tolist()
+
+# Path calculation API
 @app.route("/get_path", methods=["POST"])
 def get_path():
     data = request.get_json()
@@ -46,6 +58,18 @@ def get_path():
         return jsonify({"error": "Invalid input"}), 400
     path = a_star(grid, start, end)
     return jsonify({"path": path})
+
+# Image upload and processing API
+@app.route("/process_floorplan", methods=["POST"])
+def process_floorplan():
+    # Get the uploaded image file
+    file = request.files['file']
+    file_path = "uploaded_floorplan.png"
+    file.save(file_path)
+
+    # Process the image and convert it to grid
+    grid = floorplan_to_grid(file_path)
+    return jsonify({"grid": grid})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
