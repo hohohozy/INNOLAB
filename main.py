@@ -75,4 +75,4 @@ def process_floorplan():
 # Root route to avoid 404 error
 @app.route("/")
 def index():
-    return "Welcome to the Pathfinding API
+    return "Welcome to the Pathfinding API"
