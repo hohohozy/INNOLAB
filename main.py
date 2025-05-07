@@ -27,8 +27,8 @@ def a_star(grid, start, end):
             path.append({"x": start[1] * 20, "y": start[0] * 20})
             path.reverse()
             return path
-        for dx, dy in [(0,1), (1,0), (0,-1), (-1,0)]:
-            neighbor = (current[0]+dx, current[1]+dy)
+        for dx, dy in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
+            neighbor = (current[0] + dx, current[1] + dy)
             if 0 <= neighbor[0] < rows and 0 <= neighbor[1] < cols:
                 if grid[neighbor[0]][neighbor[1]] == 1:
                     continue
@@ -77,8 +77,9 @@ def process_floorplan():
 def index():
     return "Welcome to the Pathfinding API"
 
+# Ensure the app binds to the correct port and host
 if __name__ == "__main__":
-    # Get the port from the environment, default to 5000
+    # Get the port from environment variable, default to 5000 if not set
     port = int(os.environ.get("PORT", 5000))
-    # Make sure to listen on all network interfaces
+    # Run the Flask app on all network interfaces (0.0.0.0)
     app.run(host="0.0.0.0", port=port)
