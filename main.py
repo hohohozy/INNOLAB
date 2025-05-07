@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import heapq
 import numpy as np
 import cv2
+import os
 
 app = Flask(__name__)
 
@@ -71,5 +72,7 @@ def process_floorplan():
     grid = floorplan_to_grid(file_path)
     return jsonify({"grid": grid})
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+# Root route to avoid 404 error
+@app.route("/")
+def index():
+    return "Welcome to the Pathfinding API
