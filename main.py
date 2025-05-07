@@ -76,3 +76,9 @@ def process_floorplan():
 @app.route("/")
 def index():
     return "Welcome to the Pathfinding API"
+
+if __name__ == "__main__":
+    # Get the port from the environment, default to 5000
+    port = int(os.environ.get("PORT", 5000))
+    # Make sure to listen on all network interfaces
+    app.run(host="0.0.0.0", port=port)
